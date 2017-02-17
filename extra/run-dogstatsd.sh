@@ -12,7 +12,11 @@ else
   exit 1
 fi
 
-sed -i -e "s/^.*hostname:.*$/hostname: ${DYNO}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+DD_HOSTNAME="${DYNO}"
+if [[ $HEROKU_APP_NAME ]]; then
+  DD_HOSTNAME="${HEROKU_APP_NAME}.${DD_HOSTNAME}"
+fi
+sed -i -e "s/^.*hostname:.*$/hostname: ${DD_HOSTNAME}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 
 if [[ $DATADOG_HISTOGRAM_PERCENTILES ]]; then
   sed -i -e "s/^.*histogram_percentiles:.*$/histogram_percentiles: ${DATADOG_HISTOGRAM_PERCENTILES}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
