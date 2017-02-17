@@ -12,12 +12,7 @@ else
   exit 1
 fi
 
-if [[ $HEROKU_APP_NAME ]]; then
-  sed -i -e "s/^.*hostname:.*$/hostname: ${HEROKU_APP_NAME}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
-else
-  echo "HEROKU_APP_NAME environment variable not set. Run: heroku apps:info|grep ===|cut -d' ' -f2"
-  exit 1
-fi
+sed -i -e "s/^.*hostname:.*$/hostname: ${DYNO}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 
 if [[ $DATADOG_HISTOGRAM_PERCENTILES ]]; then
   sed -i -e "s/^.*histogram_percentiles:.*$/histogram_percentiles: ${DATADOG_HISTOGRAM_PERCENTILES}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
